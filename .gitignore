@@ -1,0 +1,10 @@
+*.iml
+node_modules
+.idea
+lib
+src/*
+!src/creation
+!src/transforming
+!src/utils.js
+!src/disposable.js
+test.js
