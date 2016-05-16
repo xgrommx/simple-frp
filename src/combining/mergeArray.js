@@ -1,8 +1,8 @@
-import {curry, noop} from '../utils';
+import {curry, noop, length} from '../utils';
 import disposable from '../disposable';
 
 export default curry((sources, {next = noop, error = noop, completed = noop}) => {
-    let count = sources.length;
+    let count = length(sources);
 
     return disposable(sources.map(source => {
         return source({next: v => next(v), error, completed: () => {

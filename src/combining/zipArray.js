@@ -1,15 +1,16 @@
-import {noop, curry} from '../utils';
+import {noop, curry, map} from '../utils';
+import {K, I} from '../combinators';
 import disposable from '../disposable';
 
 export default curry((fn, sources, {next = noop, error = noop, completed = noop}) => {
-    let values = sources.map(_ => []);
-    let done = sources.map(_ => false);
+    let values = map(K([]))(sources);
+    let done = map(K(false))(sources);
     let disposed = false;
 
     const _next = (i) => {
         if(values.every(x => x.length > 0)) {
             next(fn(...values.map(x => x.shift())));
-        } else if(done.filter((x, j) => j !== i).every(x => x) && !disposed) {
+        } else if(done.filter((x, j) => j !== i).every(I) && !disposed) {
             completed();
         }
     };
