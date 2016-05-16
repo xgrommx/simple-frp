@@ -5,6 +5,10 @@ lib
 src/*
 !src/creation
 !src/transforming
+!src/combining
+!src/filtering
+!src/condition
+!src/utils
 !src/utils.js
 !src/disposable.js
 test.js

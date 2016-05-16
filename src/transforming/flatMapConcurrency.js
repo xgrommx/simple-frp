@@ -1,7 +1,8 @@
 import disposable from '../disposable';
 import {noop, curry} from '../utils';
 
-export default curry((concurrency, fn, sources, {next = noop, error = noop, completed = noop}) => {
+// flatMapConcurrency :: Number -> (a -> Stream b) -> Stream a -> Stream b
+export default curry((concurrency, fn, sources) => ({next = noop, error = noop, completed = noop}) => {
     let active = 0;
     let disposables = [];
     let finishParent = false;
@@ -24,7 +25,7 @@ export default curry((concurrency, fn, sources, {next = noop, error = noop, comp
             },
             completed: () => {
                 if (!disposed) {
-                    innerSubscription(); // dispose
+                    innerSubscription && innerSubscription(); // dispose
                     let index = disposables.indexOf(innerSubscription);
                     disposables.splice(index, 1);
 
@@ -64,11 +65,13 @@ export default curry((concurrency, fn, sources, {next = noop, error = noop, comp
             finishParent = true;
             if (active === 0 && !disposed) {
                 disposed = true;
+                subscription && subscription();
                 completed();
-                subscription();
             }
         }
     });
 
-    return disposable([subscription, ...disposables]);
+    return disposable([subscription, ...disposables], () => {
+        disposed = true;
+    });
 });

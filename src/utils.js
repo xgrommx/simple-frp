@@ -1,5 +1,7 @@
 export const noop = () => {};
 
+export const flip = fn => x => y => fn(y)(x);
+
 export const compose = (...fns) => {
     let start = fns.length - 1;
     
